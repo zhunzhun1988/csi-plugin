@@ -1,0 +1,4 @@
+[submodule "driver-registrar"]
+	path = driver-registrar
+	url = https://github.com/kubernetes-csi/driver-registrar
+	branch = release-1.0
