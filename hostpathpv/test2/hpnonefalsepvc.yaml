@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: hpnonefalsepvc
+  namespace: patricktest
+spec:
+  volumeName: hpnonefalsepv
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: "70Mi"
+  selector:
+    matchLabels:
+      namespaceName: patricktest
+      storageName: demo-datadir1

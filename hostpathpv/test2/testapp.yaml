@@ -1,0 +1,68 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: pvtest
+spec:
+  replicas: 1
+  template:
+     metadata:
+       labels:
+         name: csi-xfshostpath-test
+     spec:
+        volumes:
+         - name: pv1
+           persistentVolumeClaim:
+             claimName: keeptruepvc
+         - name: pv2
+           persistentVolumeClaim:
+             claimName: keepfalsepvc
+         - name: pv3
+           persistentVolumeClaim:
+             claimName: nonetruepvc
+         - name: pv4
+           persistentVolumeClaim:
+             claimName: nonefalsepvc
+         - name: pv5
+           persistentVolumeClaim:
+             claimName: hpkeeptruepvc
+         - name: pv6
+           persistentVolumeClaim:
+             claimName: hpkeepfalsepvc
+         - name: pv7
+           persistentVolumeClaim:
+             claimName: hpnonetruepvc
+         - name: pv8
+           persistentVolumeClaim:
+             claimName: hpnonefalsepvc
+        containers:
+          - name: test
+            image: ihub.helium.io:29006/patricktest/diskwrite:v3
+            imagePullPolicy: "Always"
+            command:
+            - "/diskwrite"
+            - "/mnt/data1/patrick.txt"
+            - "4"
+            resources:
+              limits:
+                cpu: 100m
+                memory: 100Mi
+              requests:
+                cpu: 100m
+                memory: 100Mi
+            volumeMounts:
+            - mountPath: /mnt/data1
+              name: pv1
+            - mountPath: /mnt/data2
+              name: pv2
+            - mountPath: /mnt/data3
+              name: pv3
+            - mountPath: /mnt/data4
+              name: pv4
+            - mountPath: /mnt/data5
+              name: pv5
+            - mountPath: /mnt/data6
+              name: pv6
+            - mountPath: /mnt/data7
+              name: pv7
+            - mountPath: /mnt/data8
+              name: pv8

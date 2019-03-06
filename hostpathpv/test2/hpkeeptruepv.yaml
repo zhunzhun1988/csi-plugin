@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    io.enndata.user/alpha-pvhostpathmountpolicy: "keep"
+    io.enndata.user/alpha-pvhostpathquotaforonepod: "true"
+  labels:
+    namespaceName: patricktest
+    storageName: demo-datadir1
+  name: hpkeeptruepv 
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: "70Mi"
+  hostPath:
+    path: /k8s_storage/ys/demo-datadir1
+  persistentVolumeReclaimPolicy: Retain

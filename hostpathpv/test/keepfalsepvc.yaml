@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:   
+  name: keepfalsepvc
+  namespace: patricktest 
+spec:
+  volumeName: keepfalsepv
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Mi

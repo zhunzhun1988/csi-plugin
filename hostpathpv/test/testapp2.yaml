@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: csi-hostpathpv-test
+spec:
+  replicas: 2
+  template:
+     metadata:
+       labels:
+         name: csi-xfshostpath-test
+     spec:
+        volumes:
+         - name: xfshostpath-pvc1
+           persistentVolumeClaim:
+             claimName: keepfalsepvc
+        containers:
+          - name: test
+            image: ihub.helium.io:29006/patricktest/diskwrite:v3
+            imagePullPolicy: "Always"
+            command:
+            - "/diskwrite"
+            - "/mnt/data1/patrick.txt"
+            - "4"
+            resources:
+              limits:
+                cpu: 100m
+                memory: 128Mi
+              requests:
+                cpu: 100m
+                memory: 128Mi
+            volumeMounts:
+            - mountPath: /mnt/data1
+              name: xfshostpath-pvc1
