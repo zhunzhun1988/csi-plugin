@@ -1,6 +1,6 @@
 all: build
 
-TAG?=v0.1.1
+TAG?=v1.0.0
 REGISTRY?=ihub.helium.io:29006
 NAME?=library/hostpathcsi
 FLAGS=
@@ -8,7 +8,7 @@ ENVVAR=
 GOOS?=linux
 ROOTPATH=`pwd` 
 BUILDGOPATH=/tmp/k8splugin-build
-BUILDPATH=$(BUILDGOPATH)/src/k8s-plugins/csi-plugin/hostpathpv
+BUILDPATH=$(BUILDGOPATH)/src/github.com/k8s-plugins/csi-plugin/hostpathpv
 
 .IGNORE : deletedeploy
 .IGNORE : createnamespace
@@ -18,14 +18,11 @@ buildEnvClean:
 	@rm $(BUILDPATH) 1>/dev/null 2>/dev/null || true
 
 buildEnv: buildEnvClean
-	@mkdir -p $(BUILDGOPATH)/src/k8s-plugins/csi-plugin/
+	@mkdir -p $(BUILDGOPATH)/src/github.com/k8s-plugins/csi-plugin/
 	@ln -s $(ROOTPATH) $(BUILDPATH)
-	
-deps:
-	go get github.com/tools/godep
 
 build: clean deps buildEnv
-	@cd $(BUILDPATH) && GOPATH=$(BUILDGOPATH) $(ENVVAR) GOOS=$(GOOS) CGO_ENABLED=0 godep go build -o hostpathcsi hostpath/main.go
+	@cd $(BUILDPATH) && GOPATH=$(BUILDGOPATH) $(ENVVAR) GOOS=$(GOOS) CGO_ENABLED=0 go build -o hostpathcsi hostpath/main.go
 
 docker:
 ifndef REGISTRY

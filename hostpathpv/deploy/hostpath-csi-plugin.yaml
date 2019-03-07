@@ -54,7 +54,7 @@ spec:
             capabilities:
               add: ["SYS_ADMIN"]
             allowPrivilegeEscalation: true 
-          image: ihub.helium.io:29006/library/hostpathcsi:v0.1.1
+          image: ihub.helium.io:29006/library/hostpathcsi:v1.0.0
           imagePullPolicy: "Always"
           resources:
              limits:
@@ -84,7 +84,7 @@ spec:
             - name: plugin-dir
               mountPath: /var/lib/kubelet/plugins/xfshostpathplugin
             - name: pods-mount-dir
-              mountPath: /data/kubelet/pods
+              mountPath: /var/lib/kubelet/pods
               mountPropagation: "Bidirectional"
             - mountPath: /dev
               name: host-dev
@@ -106,7 +106,7 @@ spec:
             type: DirectoryOrCreate
         - name: pods-mount-dir
           hostPath:
-            path: /data/kubelet/pods
+            path: /var/lib/kubelet/pods
             type: Directory
         - name: socket-dir
           hostPath:

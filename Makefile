@@ -46,14 +46,16 @@ buildRegistrarImage: buildRegistrar
 	@rm Dockerfile 1>/dev/null 2>/dev/null || true
 	@cp Dockerfile_registrar Dockerfile
 	@docker build -t $(IMAGE_NAME_TAG_REGISTRAR) .
+	@rm Dockerfile 1>/dev/null 2>/dev/null || true 
 
 buildAttacher: buildEnv
 	@cd $(BUILDPATH)/external-attacher && GOPATH=$(BUILDGOPATH) CGO_ENABLED=0 GOOS=linux go build -o ./bin/csi-attacher ./cmd/csi-attacher
 	
 buildAttacherImage: buildAttacher
-	@rm Dockerfile
+	@rm Dockerfile 1>/dev/null 2>/dev/null || true
 	@cp Dockerfile_attacher Dockerfile
 	@docker build -t $(IMAGE_NAME_TAG_ATTACHER) .
+	@rm Dockerfile 1>/dev/null 2>/dev/null || true
 
 push:
 	docker push $(IMAGE_NAME_TAG_ATTACHER)

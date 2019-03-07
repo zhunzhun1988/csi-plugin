@@ -2,13 +2,14 @@ package xfsquotamanager
 
 import (
 	"fmt"
-	"k8s-plugins/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/common"
-	"k8s-plugins/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/prjquota"
 	"path"
 	"runtime"
 	"sort"
 	"strings"
 	"sync"
+
+	"github.com/k8s-plugins/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/common"
+	"github.com/k8s-plugins/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/prjquota"
 
 	"github.com/golang/glog"
 )
