@@ -8,8 +8,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/k8s-plugins/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/common"
-	"github.com/k8s-plugins/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/prjquota"
+	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/common"
+	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/prjquota"
 
 	"github.com/golang/glog"
 )

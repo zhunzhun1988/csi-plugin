@@ -8,7 +8,7 @@ ENVVAR=
 GOOS?=linux
 ROOTPATH=`pwd` 
 BUILDGOPATH=/tmp/k8splugin-build
-BUILDPATH=$(BUILDGOPATH)/src/github.com/k8s-plugins/csi-plugin/hostpathpv
+BUILDPATH=$(BUILDGOPATH)/src/github.com/Rhealb/csi-plugin/hostpathpv
 
 .IGNORE : deletedeploy
 .IGNORE : createnamespace
@@ -18,7 +18,7 @@ buildEnvClean:
 	@rm $(BUILDPATH) 1>/dev/null 2>/dev/null || true
 
 buildEnv: buildEnvClean
-	@mkdir -p $(BUILDGOPATH)/src/github.com/k8s-plugins/csi-plugin/
+	@mkdir -p $(BUILDGOPATH)/src/github.com/Rhealb/csi-plugin/
 	@ln -s $(ROOTPATH) $(BUILDPATH)
 
 build: clean deps buildEnv

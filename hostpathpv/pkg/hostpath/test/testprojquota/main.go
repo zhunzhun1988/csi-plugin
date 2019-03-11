@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/k8s-plugins/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/prjquota"
+	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/prjquota"
 )
 
 var pq prjquota.Interface

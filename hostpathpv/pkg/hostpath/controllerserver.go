@@ -21,8 +21,8 @@ import (
 	"github.com/pborman/uuid"
 	"golang.org/x/net/context"
 
+	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/csi-common"
 	"github.com/container-storage-interface/spec/lib/go/csi/v0"
-	"github.com/k8s-plugins/csi-plugin/hostpathpv/pkg/csi-common"
 )
 
 const (
@@ -72,91 +72,3 @@ func (cs *controllerServer) ControllerUnpublishVolume(ctx context.Context, req *
 func (cs *controllerServer) ControllerPublishVolume(ctx context.Context, req *csi.ControllerPublishVolumeRequest) (*csi.ControllerPublishVolumeResponse, error) {
 	return &csi.ControllerPublishVolumeResponse{}, nil
 }
-
-///*
-//Copyright 2018 The Kubernetes Authors.
-
-//Licensed under the Apache License, Version 2.0 (the "License");
-//you may not use this file except in compliance with the License.
-//You may obtain a copy of the License at
-
-//    http://www.apache.org/licenses/LICENSE-2.0
-
-//Unless required by applicable law or agreed to in writing, software
-//distributed under the License is distributed on an "AS IS" BASIS,
-//WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//See the License for the specific language governing permissions and
-//limitations under the License.
-//*/
-
-//package hostpath
-
-//import (
-//	"github.com/container-storage-interface/spec/lib/go/csi/v0"
-//	"github.com/k8s-plugins/csi-plugin/hostpathpv/pkg/csi-common"
-//	"golang.org/x/net/context"
-//	"k8s.io/klog"
-//)
-
-//const (
-//	oneGB = 1073741824
-//)
-
-//type controllerServer struct {
-//	*csicommon.DefaultControllerServer
-//}
-//type volumeID string
-
-//func makeVolumeID(volName string) volumeID {
-//	return volumeID("csi-hostpathpv-" + volName)
-//}
-
-//func (cs *controllerServer) CreateVolume(ctx context.Context, req *csi.CreateVolumeRequest) (*csi.CreateVolumeResponse, error) {
-//	if err := cs.Driver.ValidateControllerServiceRequest(csi.ControllerServiceCapability_RPC_CREATE_DELETE_VOLUME); err != nil {
-//		klog.Errorf("CreateVolumeRequest validation failed: %v", err)
-//		return nil, err
-//	}
-//	volID := makeVolumeID(req.GetName())
-
-//	return &csi.CreateVolumeResponse{
-//		Volume: &csi.Volume{
-//			VolumeId:      string(volID),
-//			CapacityBytes: req.GetCapacityRange().GetRequiredBytes(),
-//			VolumeContext: req.GetParameters(),
-//		},
-//	}, nil
-//}
-
-//func (cs *controllerServer) DeleteVolume(ctx context.Context, req *csi.DeleteVolumeRequest) (*csi.DeleteVolumeResponse, error) {
-//	if err := cs.Driver.ValidateControllerServiceRequest(csi.ControllerServiceCapability_RPC_CREATE_DELETE_VOLUME); err != nil {
-//		klog.Errorf("DeleteVolumeRequest validation failed: %v", err)
-//		return nil, err
-//	}
-//	return &csi.DeleteVolumeResponse{}, nil
-//}
-
-//// ValidateVolumeCapabilities checks whether the volume capabilities requested
-//// are supported.
-//func (cs *controllerServer) ValidateVolumeCapabilities(
-//	ctx context.Context,
-//	req *csi.ValidateVolumeCapabilitiesRequest) (*csi.ValidateVolumeCapabilitiesResponse, error) {
-//	// Cephfs doesn't support Block volume
-//	for _, cap := range req.VolumeCapabilities {
-//		if cap.GetBlock() != nil {
-//			return &csi.ValidateVolumeCapabilitiesResponse{Message: ""}, nil
-//		}
-//	}
-//	return &csi.ValidateVolumeCapabilitiesResponse{
-//		Confirmed: &csi.ValidateVolumeCapabilitiesResponse_Confirmed{
-//			VolumeCapabilities: req.VolumeCapabilities,
-//		},
-//	}, nil
-//}
-
-//func (cs *controllerServer) ControllerUnpublishVolume(ctx context.Context, req *csi.ControllerUnpublishVolumeRequest) (*csi.ControllerUnpublishVolumeResponse, error) {
-//	return &csi.ControllerUnpublishVolumeResponse{}, nil
-//}
-
-//func (cs *controllerServer) ControllerPublishVolume(ctx context.Context, req *csi.ControllerPublishVolumeRequest) (*csi.ControllerPublishVolumeResponse, error) {
-//	return &csi.ControllerPublishVolumeResponse{}, nil
-//}

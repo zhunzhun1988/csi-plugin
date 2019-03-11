@@ -36,10 +36,10 @@ import (
 	"google.golang.org/grpc/status"
 	"k8s.io/kubernetes/pkg/util/mount"
 
-	"github.com/k8s-plugins/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager"
-	"github.com/k8s-plugins/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/common"
+	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager"
+	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/common"
 
-	"github.com/k8s-plugins/csi-plugin/hostpathpv/pkg/csi-common"
+	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/csi-common"
 )
 
 type nodeServer struct {
