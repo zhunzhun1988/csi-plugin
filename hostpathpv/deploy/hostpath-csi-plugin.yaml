@@ -54,7 +54,7 @@ spec:
             capabilities:
               add: ["SYS_ADMIN"]
             allowPrivilegeEscalation: true 
-          image: ihub.helium.io:29006/library/hostpathcsi:v1.0.0
+          image: ihub.helium.io:29006/library/hostpathcsi:v0.3.1
           imagePullPolicy: "Always"
           resources:
              limits:
