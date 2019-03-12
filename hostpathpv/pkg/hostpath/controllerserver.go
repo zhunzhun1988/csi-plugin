@@ -17,9 +17,9 @@ limitations under the License.
 package hostpath
 
 import (
-	"github.com/golang/glog"
 	"github.com/pborman/uuid"
 	"golang.org/x/net/context"
+	glog "k8s.io/klog"
 
 	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/csi-common"
 	"github.com/container-storage-interface/spec/lib/go/csi/v0"

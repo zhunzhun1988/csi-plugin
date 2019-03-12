@@ -28,7 +28,7 @@ import (
 
 	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/common"
 
-	"github.com/golang/glog"
+	glog "k8s.io/klog"
 )
 
 const (

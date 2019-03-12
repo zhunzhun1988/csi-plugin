@@ -11,7 +11,7 @@ import (
 	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/common"
 	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/prjquota"
 
-	"github.com/golang/glog"
+	glog "k8s.io/klog"
 )
 
 type Interface interface {

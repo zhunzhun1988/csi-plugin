@@ -19,7 +19,7 @@ package hostpath
 import (
 	"time"
 
-	"github.com/golang/glog"
+	glog "k8s.io/klog"
 
 	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager"
 

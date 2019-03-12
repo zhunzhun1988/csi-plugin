@@ -14,8 +14,8 @@ import (
 	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager"
 	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/common"
 
-	"github.com/golang/glog"
 	v1 "k8s.io/api/core/v1"
+	glog "k8s.io/klog"
 	"k8s.io/kubernetes/pkg/util/mount"
 )
 

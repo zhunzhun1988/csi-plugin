@@ -27,9 +27,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/golang/glog"
 	"golang.org/x/net/context"
 	v1 "k8s.io/api/core/v1"
+	glog "k8s.io/klog"
 
 	"github.com/container-storage-interface/spec/lib/go/csi/v0"
 	"google.golang.org/grpc/codes"
