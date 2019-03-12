@@ -563,11 +563,14 @@ func setPVMountInfo(pv *v1.PersistentVolume, nodeName string, list MountInfoList
 			} else {
 				hostPathPVMountInfoList[i].MountInfos = list
 			}
+			if len(hostPathPVMountInfoList[i].MountInfos) == 0 {
+				hostPathPVMountInfoList = append(hostPathPVMountInfoList[0:i], hostPathPVMountInfoList[i+1:]...)
+			}
 			find = true
 			break
 		}
 	}
-	if find == false {
+	if find == false && len(list) > 0 {
 		hostPathPVMountInfoList = append(hostPathPVMountInfoList, HostPathPVMountInfo{
 			NodeName:   nodeName,
 			MountInfos: list,

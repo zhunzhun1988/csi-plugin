@@ -102,8 +102,8 @@ func RunControllerandNodePublishServer(endpoint string, d *CSIDriver, cs csi.Con
 }
 
 func logGRPC(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
-	klog.Errorf("GRPC call: %s", info.FullMethod)
-	klog.Errorf("GRPC request: %s", protosanitizer.StripSecrets(req))
+	klog.V(3).Infof("GRPC call: %s", info.FullMethod)
+	klog.V(5).Infof("GRPC request: %s", protosanitizer.StripSecrets(req))
 	resp, err := handler(ctx, req)
 	if err != nil {
 		klog.Errorf("GRPC error: %v", err)
