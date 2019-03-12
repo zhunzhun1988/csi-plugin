@@ -15,7 +15,7 @@ BUILDPATH=$(BUILDGOPATH)/src/github.com/Rhealb/csi-plugin/hostpathpv
 .IGNORE : buildEnvClean
 
 buildEnvClean:
-	@rm $(BUILDPATH) 1>/dev/null 2>/dev/null || true
+	@rm -rf $(BUILDGOPATH) 1>/dev/null 2>/dev/null || true
 
 buildEnv: buildEnvClean
 	@mkdir -p $(BUILDGOPATH)/src/github.com/Rhealb/csi-plugin/
