@@ -38,7 +38,7 @@ spec:
         "node-role.kubernetes.io/hostpath": "true"
       containers:
         - name: attacher
-          image: ihub.helium.io:29006/library/csi-attacher:v0.3.0
+          image: ihub.helium.io:29006/library/csi-attacher:v1.0.1
           resources:
              limits:
                cpu: 100m

@@ -6,3 +6,6 @@
 	path = external-attacher
 	url = https://github.com/kubernetes-csi/external-attacher
 	branch = release-1.0
+[submodule "node-driver-registrar"]
+	path = node-driver-registrar
+	url = https://github.com/kubernetes-csi/node-driver-registrar.git

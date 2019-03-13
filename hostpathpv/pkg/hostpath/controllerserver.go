@@ -17,12 +17,14 @@ limitations under the License.
 package hostpath
 
 import (
-	"github.com/pborman/uuid"
-	"golang.org/x/net/context"
-	glog "k8s.io/klog"
+	"fmt"
 
 	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/csi-common"
-	"github.com/container-storage-interface/spec/lib/go/csi/v0"
+	"github.com/container-storage-interface/spec/lib/go/csi"
+	"golang.org/x/net/context"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+	"k8s.io/klog"
 )
 
 const (
@@ -34,22 +36,25 @@ type controllerServer struct {
 }
 
 func (cs *controllerServer) CreateVolume(ctx context.Context, req *csi.CreateVolumeRequest) (*csi.CreateVolumeResponse, error) {
-	if err := cs.Driver.ValidateControllerServiceRequest(csi.ControllerServiceCapability_RPC_CREATE_DELETE_VOLUME); err != nil {
-		glog.V(3).Infof("invalid create volume req: %v", req)
+	if err := cs.validateCreateVolumeRequest(req); err != nil {
+		klog.Errorf("CreateVolumeRequest validation failed: %v", err)
 		return nil, err
 	}
-	volumeId := uuid.NewUUID().String()
+
+	volID := makeVolumeID(req.GetName())
 
 	return &csi.CreateVolumeResponse{
 		Volume: &csi.Volume{
-			Id: volumeId,
+			VolumeId:      string(volID),
+			CapacityBytes: req.GetCapacityRange().GetRequiredBytes(),
+			VolumeContext: req.GetParameters(),
 		},
 	}, nil
 }
 
 func (cs *controllerServer) DeleteVolume(ctx context.Context, req *csi.DeleteVolumeRequest) (*csi.DeleteVolumeResponse, error) {
-	if err := cs.Driver.ValidateControllerServiceRequest(csi.ControllerServiceCapability_RPC_CREATE_DELETE_VOLUME); err != nil {
-		glog.V(3).Infof("invalid delete volume req: %v", req)
+	if err := cs.validateDeleteVolumeRequest(); err != nil {
+		klog.Errorf("DeleteVolumeRequest validation failed: %v", err)
 		return nil, err
 	}
 
@@ -58,17 +63,45 @@ func (cs *controllerServer) DeleteVolume(ctx context.Context, req *csi.DeleteVol
 
 func (cs *controllerServer) ValidateVolumeCapabilities(ctx context.Context, req *csi.ValidateVolumeCapabilitiesRequest) (*csi.ValidateVolumeCapabilitiesResponse, error) {
 	for _, cap := range req.VolumeCapabilities {
-		if cap.GetAccessMode().GetMode() != csi.VolumeCapability_AccessMode_SINGLE_NODE_WRITER {
-			return &csi.ValidateVolumeCapabilitiesResponse{Supported: false, Message: ""}, nil
+		if cap.GetBlock() != nil {
+			return &csi.ValidateVolumeCapabilitiesResponse{Message: ""}, nil
 		}
 	}
-	return &csi.ValidateVolumeCapabilitiesResponse{Supported: true, Message: ""}, nil
+	return &csi.ValidateVolumeCapabilitiesResponse{
+		Confirmed: &csi.ValidateVolumeCapabilitiesResponse_Confirmed{
+			VolumeCapabilities: req.VolumeCapabilities,
+		},
+	}, nil
 }
 
-func (cs *controllerServer) ControllerUnpublishVolume(ctx context.Context, req *csi.ControllerUnpublishVolumeRequest) (*csi.ControllerUnpublishVolumeResponse, error) {
-	return &csi.ControllerUnpublishVolumeResponse{}, nil
+// Controller service request validation
+func (cs *controllerServer) validateCreateVolumeRequest(req *csi.CreateVolumeRequest) error {
+	if err := cs.Driver.ValidateControllerServiceRequest(csi.ControllerServiceCapability_RPC_CREATE_DELETE_VOLUME); err != nil {
+		return fmt.Errorf("invalid CreateVolumeRequest: %v", err)
+	}
+
+	if req.GetName() == "" {
+		return status.Error(codes.InvalidArgument, "Volume Name cannot be empty")
+	}
+
+	reqCaps := req.GetVolumeCapabilities()
+	if reqCaps == nil {
+		return status.Error(codes.InvalidArgument, "Volume Capabilities cannot be empty")
+	}
+
+	for _, cap := range reqCaps {
+		if cap.GetBlock() != nil {
+			return status.Error(codes.Unimplemented, "block volume not supported")
+		}
+	}
+
+	return nil
 }
 
-func (cs *controllerServer) ControllerPublishVolume(ctx context.Context, req *csi.ControllerPublishVolumeRequest) (*csi.ControllerPublishVolumeResponse, error) {
-	return &csi.ControllerPublishVolumeResponse{}, nil
+func (cs *controllerServer) validateDeleteVolumeRequest() error {
+	if err := cs.Driver.ValidateControllerServiceRequest(csi.ControllerServiceCapability_RPC_CREATE_DELETE_VOLUME); err != nil {
+		return fmt.Errorf("invalid DeleteVolumeRequest: %v", err)
+	}
+
+	return nil
 }

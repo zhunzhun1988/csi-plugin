@@ -1,6 +1,6 @@
 all: build
 
-TAG?=v0.3.1
+TAG?=v1.0.0
 REGISTRY?=ihub.helium.io:29006
 NAME?=library/hostpathcsi
 FLAGS=
