@@ -85,7 +85,6 @@ func (hostpath *hostpath) Run(driverName, nodeID, nodeName, endpoint string, cli
 	}
 	hostpath.driver.AddControllerServiceCapabilities([]csi.ControllerServiceCapability_RPC_Type{
 		csi.ControllerServiceCapability_RPC_CREATE_DELETE_VOLUME,
-		csi.ControllerServiceCapability_RPC_PUBLISH_UNPUBLISH_VOLUME,
 	})
 	hostpath.driver.AddVolumeCapabilityAccessModes([]csi.VolumeCapability_AccessMode_Mode{csi.VolumeCapability_AccessMode_MULTI_NODE_SINGLE_WRITER,
 		csi.VolumeCapability_AccessMode_MULTI_NODE_MULTI_WRITER})

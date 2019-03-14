@@ -34,7 +34,15 @@ spec:
           args:
             - "--v=5"
             - "--csi-address=/csi/csi.sock"
-            - "--kubelet-registration-path=/var/lib/kubelet/plugins/xfshostpathplugin/csi.sock"
+            - "--kubelet-registration-path=/data/kubelet/plugins/xfshostpathplugin/csi.sock"
+          lifecycle:
+            preStop:
+              exec:
+                command: [
+                  "/bin/sh", "-c",
+                  "rm -rf /registration/csi-cephfsplugin \
+                  /registration/csi-xfshostpathplugin-reg.sock"
+                ]
           env:
             - name: ADDRESS
               value: /var/lib/kubelet/plugins/xfshostpathplugin/csi.sock
@@ -82,6 +90,9 @@ spec:
           volumeMounts:
             - name: plugin-dir
               mountPath: /var/lib/kubelet/plugins/xfshostpathplugin
+            - name: csi-plugins-dir
+              mountPath: /var/lib/kubelet/plugins/kubernetes.io/csi
+              mountPropagation: "Bidirectional"
             - name: pods-mount-dir
               mountPath: /data/kubelet/pods
               mountPropagation: "Bidirectional"
@@ -101,7 +112,11 @@ spec:
       volumes:
         - name: plugin-dir
           hostPath:
-            path: /var/lib/kubelet/plugins/xfshostpathplugin
+            path: /data/kubelet/plugins/xfshostpathplugin
+            type: DirectoryOrCreate
+        - name: csi-plugins-dir
+          hostPath:
+            path: /data/kubelet/plugins/kubernetes.io/csi
             type: DirectoryOrCreate
         - name: pods-mount-dir
           hostPath:
@@ -109,7 +124,7 @@ spec:
             type: Directory
         - name: socket-dir
           hostPath:
-            path: /var/lib/kubelet/plugins/xfshostpathplugin
+            path: /data/kubelet/plugins/xfshostpathplugin
             type: DirectoryOrCreate
         - name: host-dev
           hostPath:
@@ -133,5 +148,5 @@ spec:
             path: /xfs
         - name: registration-dir
           hostPath:
-            path: /var/lib/kubelet/plugins/
+            path: /data/kubelet/plugins_registry/
             type: Directory
