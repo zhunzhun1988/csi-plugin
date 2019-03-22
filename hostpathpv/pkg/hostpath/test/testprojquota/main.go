@@ -4,9 +4,10 @@ import (
 	"strconv"
 	//"encoding/json"
 	"fmt"
-	"k8s-plugins/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/prjquota"
 	"os"
 	"strings"
+
+	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/prjquota"
 )
 
 var pq prjquota.Interface

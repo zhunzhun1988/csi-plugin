@@ -22,12 +22,12 @@ import (
 	"path"
 	"time"
 
-	"k8s-plugins/csi-plugin/hostpathpv/pkg/hostpath"
+	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/hostpath"
 
-	"github.com/golang/glog"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
+	glog "k8s.io/klog"
 )
 
 func init() {

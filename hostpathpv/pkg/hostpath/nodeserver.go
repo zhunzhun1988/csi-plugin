@@ -27,19 +27,19 @@ import (
 	"sync"
 	"time"
 
-	"github.com/golang/glog"
 	"golang.org/x/net/context"
 	v1 "k8s.io/api/core/v1"
+	glog "k8s.io/klog"
 
-	"github.com/container-storage-interface/spec/lib/go/csi/v0"
+	"github.com/container-storage-interface/spec/lib/go/csi"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"k8s.io/kubernetes/pkg/util/mount"
 
-	"k8s-plugins/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager"
-	"k8s-plugins/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/common"
+	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager"
+	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/common"
 
-	"github.com/kubernetes-csi/drivers/pkg/csi-common"
+	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/csi-common"
 )
 
 type nodeServer struct {
@@ -138,7 +138,7 @@ func (ns *nodeServer) NodePublishVolume(ctx context.Context, req *csi.NodePublis
 
 	readOnly := req.GetReadonly()
 	volumeId := req.GetVolumeId()
-	attrib := req.GetVolumeAttributes()
+	//	attrib := req.GetVolumeAttributes()
 	//mountFlags := req.GetVolumeCapability().GetMount().GetMountFlags()
 
 	//glog.V(4).Infof("target %v\n readonly %v\n volumeId %v\nattributes %v\n mountflags %v\n",
@@ -156,8 +156,8 @@ func (ns *nodeServer) NodePublishVolume(ctx context.Context, req *csi.NodePublis
 	if pv == nil {
 		return nil, status.Error(codes.Internal, fmt.Sprintf("volumeid %s pv not find", volumeId))
 	}
-	recycle := isKeep(attrib, pv)
-	share := isShare(attrib, pv)
+	recycle := isKeep(map[string]string{}, pv)
+	share := isShare(map[string]string{}, pv)
 	quotaSize := getQuotaSize(pv)
 	var podId string
 	if share == false {

@@ -5,16 +5,17 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"k8s-plugins/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager"
-	"k8s-plugins/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/common"
 	"os"
 	"path"
 	"sort"
 	"strings"
 	"time"
 
-	"github.com/golang/glog"
+	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager"
+	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/common"
+
 	v1 "k8s.io/api/core/v1"
+	glog "k8s.io/klog"
 	"k8s.io/kubernetes/pkg/util/mount"
 )
 
@@ -562,11 +563,14 @@ func setPVMountInfo(pv *v1.PersistentVolume, nodeName string, list MountInfoList
 			} else {
 				hostPathPVMountInfoList[i].MountInfos = list
 			}
+			if len(hostPathPVMountInfoList[i].MountInfos) == 0 {
+				hostPathPVMountInfoList = append(hostPathPVMountInfoList[0:i], hostPathPVMountInfoList[i+1:]...)
+			}
 			find = true
 			break
 		}
 	}
-	if find == false {
+	if find == false && len(list) > 0 {
 		hostPathPVMountInfoList = append(hostPathPVMountInfoList, HostPathPVMountInfo{
 			NodeName:   nodeName,
 			MountInfos: list,

@@ -23,7 +23,7 @@ spec:
         "node-role.kubernetes.io/hostpath": "true"
       containers:
         - name: driver-registrar
-          image: ihub.helium.io:29006/library/driver-registrar:v0.3.0
+          image: ihub.helium.io:29006/library/csi-node-driver-registrar:v1.0.2
           resources:
              limits:
                cpu: 0m
@@ -33,8 +33,16 @@ spec:
                memory: 0Mi
           args:
             - "--v=5"
-            - "--csi-address=$(ADDRESS)"
-            - "--kubelet-registration-path="
+            - "--csi-address=/csi/csi.sock"
+            - "--kubelet-registration-path=/data/kubelet/plugins/xfshostpathplugin/csi.sock"
+          lifecycle:
+            preStop:
+              exec:
+                command: [
+                  "/bin/sh", "-c",
+                  "rm -rf /registration/csi-cephfsplugin \
+                  /registration/csi-xfshostpathplugin-reg.sock"
+                ]
           env:
             - name: ADDRESS
               value: /var/lib/kubelet/plugins/xfshostpathplugin/csi.sock
@@ -44,7 +52,7 @@ spec:
                   fieldPath: spec.nodeName
           volumeMounts:
             - name: socket-dir
-              mountPath: /var/lib/kubelet/plugins/xfshostpathplugin
+              mountPath: /csi
               readOnly: true
             - name: registration-dir
               mountPath: /registration
@@ -54,7 +62,7 @@ spec:
             capabilities:
               add: ["SYS_ADMIN"]
             allowPrivilegeEscalation: true 
-          image: ihub.helium.io:29006/library/hostpathcsi:v0.1.1
+          image: ihub.helium.io:29006/library/hostpathcsi:v1.0.0
           imagePullPolicy: "Always"
           resources:
              limits:
@@ -66,7 +74,6 @@ spec:
           args :
             - "--nodeid=$(NODE_ID)"
             - "--endpoint=$(CSI_ENDPOINT)"
-            - "--v=2"
             - "--drivername=xfshostpathplugin"
             - "--nodename=$(KUBE_NODE_NAME)"
           env:
@@ -83,6 +90,9 @@ spec:
           volumeMounts:
             - name: plugin-dir
               mountPath: /var/lib/kubelet/plugins/xfshostpathplugin
+            - name: csi-plugins-dir
+              mountPath: /var/lib/kubelet/plugins/kubernetes.io/csi
+              mountPropagation: "Bidirectional"
             - name: pods-mount-dir
               mountPath: /data/kubelet/pods
               mountPropagation: "Bidirectional"
@@ -102,7 +112,11 @@ spec:
       volumes:
         - name: plugin-dir
           hostPath:
-            path: /var/lib/kubelet/plugins/xfshostpathplugin
+            path: /data/kubelet/plugins/xfshostpathplugin
+            type: DirectoryOrCreate
+        - name: csi-plugins-dir
+          hostPath:
+            path: /data/kubelet/plugins/kubernetes.io/csi
             type: DirectoryOrCreate
         - name: pods-mount-dir
           hostPath:
@@ -110,7 +124,7 @@ spec:
             type: Directory
         - name: socket-dir
           hostPath:
-            path: /var/lib/kubelet/plugins/xfshostpathplugin
+            path: /data/kubelet/plugins/xfshostpathplugin
             type: DirectoryOrCreate
         - name: host-dev
           hostPath:
@@ -134,5 +148,5 @@ spec:
             path: /xfs
         - name: registration-dir
           hostPath:
-            path: /var/lib/kubelet/plugins/
+            path: /data/kubelet/plugins_registry/
             type: Directory

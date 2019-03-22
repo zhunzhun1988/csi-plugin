@@ -19,12 +19,12 @@ package hostpath
 import (
 	"time"
 
-	"github.com/golang/glog"
+	glog "k8s.io/klog"
 
-	"k8s-plugins/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager"
+	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager"
 
-	"github.com/container-storage-interface/spec/lib/go/csi/v0"
-	"github.com/kubernetes-csi/drivers/pkg/csi-common"
+	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/csi-common"
+	"github.com/container-storage-interface/spec/lib/go/csi"
 	"k8s.io/client-go/kubernetes"
 )
 
@@ -85,9 +85,9 @@ func (hostpath *hostpath) Run(driverName, nodeID, nodeName, endpoint string, cli
 	}
 	hostpath.driver.AddControllerServiceCapabilities([]csi.ControllerServiceCapability_RPC_Type{
 		csi.ControllerServiceCapability_RPC_CREATE_DELETE_VOLUME,
-		csi.ControllerServiceCapability_RPC_PUBLISH_UNPUBLISH_VOLUME,
 	})
-	hostpath.driver.AddVolumeCapabilityAccessModes([]csi.VolumeCapability_AccessMode_Mode{csi.VolumeCapability_AccessMode_MULTI_NODE_SINGLE_WRITER})
+	hostpath.driver.AddVolumeCapabilityAccessModes([]csi.VolumeCapability_AccessMode_Mode{csi.VolumeCapability_AccessMode_MULTI_NODE_SINGLE_WRITER,
+		csi.VolumeCapability_AccessMode_MULTI_NODE_MULTI_WRITER})
 
 	// Create GRPC servers
 	hostpath.ids = NewIdentityServer(hostpath.driver)

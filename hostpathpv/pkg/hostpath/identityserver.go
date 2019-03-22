@@ -17,7 +17,7 @@ limitations under the License.
 package hostpath
 
 import (
-	"github.com/kubernetes-csi/drivers/pkg/csi-common"
+	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/csi-common"
 )
 
 type identityServer struct {

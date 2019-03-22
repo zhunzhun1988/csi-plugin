@@ -18,7 +18,6 @@ package prjquota
 
 import (
 	"fmt"
-	"k8s-plugins/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/common"
 	"os/exec"
 	"path"
 	"regexp"
@@ -27,7 +26,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/golang/glog"
+	"github.com/Rhealb/csi-plugin/hostpathpv/pkg/hostpath/xfsquotamanager/common"
+
+	glog "k8s.io/klog"
 )
 
 const (
